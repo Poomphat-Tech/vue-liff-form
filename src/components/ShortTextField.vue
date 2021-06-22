@@ -4,7 +4,6 @@
       <label class="block text-gray-700 text-sm font-bold mb-2" :for="name">
         {{ title }}
       </label>
-      <h1>{{ value }}</h1>
       <input
         :value="value"
         @input="$emit('update:value', $event.target.value)"
@@ -38,9 +37,7 @@
 export default {
   props: ["title", "placeholder", "name", "value"],
   data() {
-    return {
-      test: "this is test local data",
-    };
+    return {};
   },
   methods: {
     validation: function (event) {

@@ -5,7 +5,7 @@
   >
     <div id="header-section" class="my-8">
       <h1 class="text-center text-lg font-semibold">
-        ข้อมูลผู้ลงทะเบียนเข้าร่วมแคมเปญ “{{ title }}
+        ข้อมูลผู้ลงทะเบียนเข้าร่วมแคมเปญ “{{ campaign_title }}
       </h1>
       <p class="text-center text-sm">
         ขอสงวนสิทธิ์ให้ผู้ที่ทำถูกต้องกติกาและเงื่อนไขในการเข้าร่วมแคมเปญ
@@ -22,36 +22,12 @@
         name="shop_name"
         v-model:value="shop_name_value"
       />
-      <h3>this is {{ shop_name_value }}</h3>
-      <fieldset class="mb-4">
-        <div>
-          <label
-            class="block text-gray-700 text-sm font-bold mb-2"
-            for="searchid"
-          >
-            LINE Official Account ID (ขึ้นต้นด้วยเครื่องหมาย @) *
-          </label>
-          <input
-            class="
-              shadow
-              appearance-none
-              border
-              rounded
-              w-full
-              py-2
-              px-3
-              text-gray-700
-              leading-tight
-              focus:outline-none
-              focus:shadow-outline
-              mb-2
-            "
-            id="searchid"
-            type="text"
-            placeholder="โปรดระบุ LINE ID ของร้าน @xxx"
-          />
-        </div>
-      </fieldset>
+      <short-text-field
+        title="LINE Official Account ID (ขึ้นต้นด้วยเครื่องหมาย @) *"
+        placeholder="โปรดระบุ LINE ID ของร้าน @xxx"
+        name="line_shop_id"
+        v-model:value="line_shop_id"
+      />
       <fieldset class="mb-4">
         <div>
           <legend class="text-base font-medium text-gray-900">
@@ -103,140 +79,72 @@
         </div>
       </fieldset>
 
+      <list-field
+        title="กรุณาระบุหมวดหมู่ธุรกิจหรือบริการของคุณ (เลือกข้อเดียวที่เหมาะสมมากที่สุด)"
+        name="business_category"
+        :choices="business_category"
+      ></list-field>
+      <list-field
+        title="ธุรกิจอาหารและเครื่องดื่ม"
+        name="food"
+        :choices="food_sector"
+      >
+      </list-field>
+      <list-field title="ธุรกิจแฟชั่น" name="fashion" :choices="fashion_sector">
+      </list-field>
+      <list-field
+        title="ธุรกิจสุขภาพและความงาม"
+        name="beauty"
+        :choices="beauty_sector"
+      >
+      </list-field>
+      <list-field
+        title="ธุรกิจแกดเจ็ต และอุปกรณ์อิเล็กทรอนิกส์"
+        name="gadget"
+        :choices="gadget_sector"
+      >
+      </list-field>
+      <list-field title="ธุรกิจบ้านและสวน" name="home" :choices="home_sector">
+      </list-field>
+      <list-field
+        title="ธุรกิจท่องเที่ยวและที่พัก"
+        name="travel"
+        :choices="travel_sector"
+      >
+      </list-field>
+      <list-field
+        title="ธุรกิจแม่และเด็ก"
+        name="mom_kid"
+        :choices="mom_kid_sector"
+      >
+      </list-field>
       <h2 class="text-left text-md font-semibold mb-8 mt-8">
         ข้อมูลส่วนบุคคล(สำหรับใช้มนการติดต่อกลับ)
       </h2>
-      <fieldset class="mb-4" id="full_name">
-        <div>
-          <label
-            class="block text-gray-700 text-sm font-bold mb-2"
-            for="full_name"
-          >
-            ชื่อ-นามสกุล *
-          </label>
-          <input
-            class="
-              shadow
-              appearance-none
-              border
-              rounded
-              w-full
-              py-2
-              px-3
-              text-gray-700
-              leading-tight
-              focus:outline-none
-              focus:shadow-outline
-              mb-2
-            "
-            id="full_name"
-            type="text"
-            placeholder="โปรดระบุชื่อและนามสกุล"
-          />
-          <p class="hidden text-red-500 text-xs italic">
-            โปรดกรอกชื่อและนามสกุล
-          </p>
-        </div>
-      </fieldset>
-
-      <fieldset class="mb-4" id="phone_number_field">
-        <div>
-          <label
-            class="block text-gray-700 text-sm font-bold mb-2"
-            for="phone_number"
-          >
-            เบอร์โทรศัพท์ *
-          </label>
-          <input
-            class="
-              shadow
-              appearance-none
-              border
-              rounded
-              w-full
-              py-2
-              px-3
-              text-gray-700
-              leading-tight
-              focus:outline-none
-              focus:shadow-outline
-              mb-2
-            "
-            id="phone_number"
-            type="tel"
-            placeholder="โปรดระบุเบอร์โทรศัพท์"
-          />
-          <p class="hidden text-red-500 text-xs italic">
-            โปรดกรอกชื่อและนามสกุล
-          </p>
-        </div>
-      </fieldset>
-
-      <fieldset class="mb-4" id="email_field">
-        <div>
-          <label
-            class="block text-gray-700 text-sm font-bold mb-2"
-            for="email_field"
-          >
-            อีเมล *
-          </label>
-          <input
-            class="
-              shadow
-              appearance-none
-              border
-              rounded
-              w-full
-              py-2
-              px-3
-              text-gray-700
-              leading-tight
-              focus:outline-none
-              focus:shadow-outline
-              mb-2
-            "
-            id="email"
-            type="email"
-            placeholder="โปรดระบุอีเมล"
-          />
-          <p class="hidden text-red-500 text-xs italic">
-            โปรดกรอกชื่อและนามสกุล
-          </p>
-        </div>
-      </fieldset>
-
-      <fieldset class="mb-4" id="line_id_field">
-        <div>
-          <label
-            class="block text-gray-700 text-sm font-bold mb-2"
-            for="full_name"
-          >
-            LINE ID ส่วนตัว *
-          </label>
-          <input
-            class="
-              shadow
-              appearance-none
-              border
-              rounded
-              w-full
-              py-2
-              px-3
-              text-gray-700
-              leading-tight
-              focus:outline-none
-              focus:shadow-outline
-              mb-2
-            "
-            id="line_id"
-            type="text"
-            placeholder="โปรดระบุ LINE ID ส่วนตัว"
-          />
-          <p class="hidden text-red-500 text-xs italic">
-            โปรดกรอกชื่อและนามสกุล
-          </p>
-        </div>
-      </fieldset>
+      <short-text-field
+        title="ชื่อ-นามสกุล *"
+        placeholder="โปรดระบุชื่อและนามสกุล"
+        name="full_name"
+        v-model:value="full_name"
+      />
+      <short-text-field
+        title="เบอร์โทรศัพท์ *"
+        placeholder="โปรดระบุเบอร์โทรศัพท์"
+        name="phone_number"
+        v-model:value="phone_number"
+      />
+      <short-text-field
+        title="อีเมล *"
+        placeholder="โปรดระบุอีเมล"
+        name="email"
+        v-model:value="email"
+      />
+      <short-text-field
+        title="LINE ID ส่วนตัว *"
+        placeholder="โปรดระบุ LINE ID ส่วนตัว"
+        name="line_id"
+        v-model:value="line_id"
+      />
 
       <fieldset class="mb-4" id="address_field">
         <div>
@@ -318,22 +226,93 @@
       </div>
     </form>
   </div>
-  <form-header></form-header>
 </template>
 
 <script>
 import FormHeader from "./components/FormHeader.vue";
 import ShortTextField from "./components/ShortTextField.vue";
+import ListField from "./components/ListField.vue";
 
 export default {
   components: {
     FormHeader,
     ShortTextField,
+    ListField,
   },
   data() {
     return {
-      title: "This is test title",
-      shop_name_value: "test shop name",
+      campaign_title: "This is test title",
+      shop_name_value: "",
+      line_shop_id: "",
+      business_category: [
+        "ธุรกิจอาหารและเครื่องดื่ม",
+        "ธุรกิจแฟชั่น",
+        "ธุรกิจสุขภาพและความงาม",
+        "ธุรกิจแกดเจ็ต และอุปกรณ์อิเล็กทรอนิกส์",
+        "ธุรกิจบ้านและสวน",
+        "ธุรกิจท่องเที่ยวและที่พัก",
+        "ธุรกิจแม่และเด็ก",
+        "อื่นๆ",
+      ],
+      food_sector: [
+        "อาหารแห้ง / เครื่องปรุง",
+        "อาหารสด / ผักและผลไม้",
+        "อาหารพร้อมทาน",
+        "ขนม เบเกอรี่ ของหวาน",
+        "เครื่องดื่ม",
+        "อื่นๆ",
+      ],
+      fashion_sector: [
+        "เสื้อผ้าผู้หญิง",
+        "เสื้อผ้าผู้ชาย",
+        "เสื้อผ้า Unisex",
+        "เครื่องประดับ",
+        "กระเป๋า",
+        "รองเท้า",
+        "แฟชั่นกีฬา",
+        "อื่นๆ",
+      ],
+      beauty_sector: [
+        "เครื่องสำอาง",
+        "สกินแคร์",
+        "วิตามินและอาหารเสริม",
+        "บริการด้านความงามและสุขภาพ",
+        "ของใช้ส่วนตัว",
+        "อื่นๆ",
+      ],
+      gadget_sector: [
+        "เกมส์และของเล่น",
+        "มือถือและอุปกรณ์เสริม",
+        "กล้องและอุปกรณ์เสริม",
+        "แกดเจ็ต",
+        "คอมพิวเตอร์และแล็บท็อป",
+        "เครื่องใช้ไฟฟ้าภายในบ้าน",
+        "อื่นๆ",
+      ],
+      home_sector: [
+        "ของตกแต่งบ้าน",
+        "เฟอร์นิเจอร์",
+        "ครัวและอุปกรณ์ทำอาหาร",
+        "อุปกรณ์และผลิตภัณฑ์ทำความสะอาด",
+        "เครื่องเขียน",
+        "อื่นๆ",
+      ],
+      travel_sector: [
+        "ที่พัก",
+        "ดีลอาหาร",
+        "แพ็กเกจท่องเที่ยว",
+        "บันเทิงและกิจกรรม",
+        "การเดินทาง",
+        "อื่นๆ",
+      ],
+      mom_kid_sector: [
+        "เสื้อผ้าเด็ก",
+        "ผลิตภัณฑ์คุณแม่",
+        "ผลิตภัณฑ์ดูแลเด็ก",
+        "ของใช้เด็ก",
+        "หนังสือ ของเล่นเด็ก",
+        "อื่นๆ",
+      ],
     };
   },
 };
