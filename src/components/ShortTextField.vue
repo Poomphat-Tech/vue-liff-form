@@ -7,8 +7,9 @@
       <input
         :value="value"
         @input="$emit('update:value', $event.target.value)"
-        @keyup.stop="validation($event)"
+        @keyup="validation($event)"
         :id="name"
+        :class="{ 'border-red-500': !isValid && isValid != null }"
         class="
           shadow
           appearance-none
@@ -23,10 +24,10 @@
           focus:shadow-outline
           mb-2
         "
-        type="text"
+        :type="type"
         :placeholder="placeholder"
       />
-      <p class="hidden text-red-500 text-xs italic">
+      <p v-if="!isValid && isValid != null" class="text-red-500 text-xs italic">
         {{ placeholder }}
       </p>
     </div>
@@ -35,14 +36,31 @@
 
 <script>
 export default {
-  props: ["title", "placeholder", "name", "value"],
+  props: ["title", "placeholder", "name", "value", "type", "isValid"],
+  emits: ["update:value", "update:isValid"],
   data() {
-    return {};
+    return {
+      emailRegX:
+        /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/,
+      phoneRegX: /((0)(\d{8,9}$))/,
+    };
   },
   methods: {
-    validation: function (event) {
-      console.log(event.target.type);
-      console.log(this.value);
+    validation: function () {
+      // Validate email
+      let defaultIsValid = false;
+      switch (this.type) {
+        case "email":
+          defaultIsValid = this.emailRegX.test(this.value);
+          break;
+        case "number":
+          defaultIsValid = this.phoneRegX.test(this.value);
+          break;
+        case "text":
+          defaultIsValid = this.value.length > 0;
+      }
+
+      this.$emit("update:isValid", defaultIsValid);
     },
   },
 };

@@ -7,8 +7,12 @@
       <div v-for="(choice, index) in choices" class="flex items-start">
         <div class="flex items-center h-5">
           <input
+            :value="choice"
             :id="name + index"
+            @change="onChange"
+            v-model="checkedValue"
             type="checkbox"
+            :class="{ 'border-red-300': !isValid && isValid != null }"
             class="
               focus:ring-indigo-500
               h-4
@@ -25,12 +29,34 @@
           }}</label>
         </div>
       </div>
+      <p v-if="!isValid && isValid != null" class="text-red-500 text-xs italic">
+        {{ placeholder }}
+      </p>
     </div>
   </fieldset>
 </template>
 
 <script>
 export default {
-  props: ["title", "choices", "name"],
+  props: {
+    title: String,
+    choices: Array,
+    name: String,
+    value: Array,
+    placeholder: String,
+    isValid: Boolean,
+  },
+  data() {
+    return {
+      checkedValue: [],
+    };
+  },
+  emits: ["update:value", "update:isValid"],
+  methods: {
+    onChange: function (event) {
+      this.$emit("update:isValid", this.checkedValue.length > 0);
+      this.$emit("update:value", this.checkedValue);
+    },
+  },
 };
 </script>
