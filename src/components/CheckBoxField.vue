@@ -7,6 +7,7 @@
       <div v-for="(choice, index) in choices" class="flex items-start">
         <div class="flex items-center h-5">
           <input
+            :key="choice"
             :value="choice"
             :id="name + index"
             @change="onChange"

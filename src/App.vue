@@ -241,6 +241,7 @@
 import ShortTextField from "./components/ShortTextField.vue";
 import CheckBoxField from "./components/CheckBoxField.vue";
 import RadioField from "./components/RadioField.vue";
+import axios from "axios";
 
 export default {
   components: {
@@ -259,9 +260,9 @@ export default {
       phoneNumber: { value: "", isValid: null },
       email: { value: "", isValid: null },
       lineID: { value: "", isValid: null },
-      address: { value: "" },
+      address: { value: "", isValid: true },
       consent: { isValid: null },
-      allFieldObj: [],
+      allFieldObj: {},
       businessCategory: {
         value: [],
         isValid: null,
@@ -366,30 +367,75 @@ export default {
     };
   },
   created() {
-    this.allFieldObj.push(
-      this.shopName,
-      this.lineShopID,
-      this.fullName,
-      this.phoneNumber,
-      this.email,
-      this.lineID,
-      this.RLPUser,
-      this.consent,
-      this.businessCategory
-    );
-    this.allFieldObj.push(
-      this.businessCategory,
-      this.foodSector,
-      this.fashionSector,
-      this.gadgetSector,
-      this.travelSector,
-      this.homeSector,
-      this.momKidSector,
-      this.beautySector
-    );
+    let contactFields = {
+      shop_name: this.shopName,
+      line_shop_id: this.lineShopID,
+      full_name: this.fullName,
+      phone_number: this.phoneNumber,
+      email: this.email,
+      line_id: this.lineID,
+      address: this.address,
+      rlp_user: this.RLPUser,
+      consent: this.consent,
+    };
+    let categoryField = {
+      business_category: this.businessCategory,
+      food_sector: this.foodSector,
+      fashion_sector: this.fashionSector,
+      gadget_sector: this.gadgetSector,
+      travel_sector: this.travelSector,
+      home_sector: this.homeSector,
+      mom_kid_sector: this.momKidSector,
+      beauty_sector: this.beautySector,
+    };
+    this.allFieldObj = Object.assign(contactFields, categoryField);
   },
   methods: {
-    onSubmit: function () {
+    onSubmit: function (event) {
+      // const bodyFormData = new FormData();
+      //Validate Form
+      let allValidation = true;
+      let formData = {};
+      for (const key in this.allFieldObj) {
+        if (this.allFieldObj[key].isValid == null) {
+          this.allFieldObj[key].isValid = false;
+        }
+
+        allValidation = allValidation && this.allFieldObj[key].isValid;
+        console.log(this.allFieldObj[key]);
+        let fieldValue = { [key]: this.allFieldObj[key].value };
+        formData = Object.assign(formData, fieldValue);
+      }
+
+      /* var csrf_token = document.querySelector(
+        '#app input[name="csrf_token"]'
+      ).value;
+      bodyFormData.append("userName", "Fred");
+      bodyFormData.append("csrf_token", csrf_token); */
+      console.log(allValidation);
+      if (allValidation) {
+        axios({
+          method: "post",
+          url: "https://poom-9c981.firebaseio.com/uit.json",
+          data: JSON.stringify(formData),
+          headers: { "Content-Type": "application/json" },
+        })
+          .then(function (response) {
+            //handle success
+            console.log("successfully");
+            console.log(response);
+          })
+          .catch(function (response) {
+            //handle error
+            console.log("error");
+            console.log(response);
+          });
+      } else {
+      }
+
+      /*bodyFormData.append("shop_name", this.shopName.value);
+      bodyFormData.append("line_shop_id", this.lineShopID.value);
+      bodyFormData.append("line_shop_id", this.lineShopID.value);
       console.log("Shop name value" + this.shopName.value);
       console.log("line Shop ID value" + this.lineShopID.value);
       console.log("Full name value" + this.fullName.value);
@@ -403,12 +449,7 @@ export default {
       console.log(this.businessCategoryCheck);
       console.log(this.consent);
 
-      // Assign validation to false if validation is not true
-      for (const index in this.allFieldObj) {
-        if (this.allFieldObj[index].isValid == null) {
-          this.allFieldObj[index].isValid = false;
-        }
-      }
+      console.log(event);*/
     },
     onBlur: function (isValid) {
       console.log("Call on blur");
