@@ -151,38 +151,15 @@
         v-model:isValid="lineID.isValid"
         type="text"
       />
-      <fieldset class="mb-4" id="address_field">
-        <div>
-          <label
-            class="block text-gray-700 text-sm font-bold mb-2"
-            for="address_field"
-          >
-            ที่อยู่สำหรับจัดส่งของรางวัล
-          </label>
-          <textarea
-            class="
-              shadow
-              appearance-none
-              border
-              rounded
-              w-full
-              py-2
-              px-3
-              text-gray-700
-              leading-tight
-              focus:outline-none
-              focus:shadow-outline
-              mb-2
-            "
-            id="address"
-            placeholder="โปรดระบุที่อยู่ที่สามารถติดต่อได้"
-            v-model="address.value"
-          />
-          <p class="hidden text-red-500 text-xs italic">
-            โปรดกรอกชื่อและนามสกุล
-          </p>
-        </div>
-      </fieldset>
+      <text-area-field
+        title="ที่อยู่สำหรับจัดส่งของรางวัล"
+        placeholder="โปรดระบุที่อยู่ที่สามารถติดต่อได้"
+        v-model:value="address.value"
+        v-model:isValid="address.isValid"
+      >
+      </text-area-field>
+
+      <!-- Consent -->
       <div class="mt-2">
         <div>
           <label class="inline-flex items-center">
@@ -241,6 +218,7 @@
 import ShortTextField from "./components/ShortTextField.vue";
 import CheckBoxField from "./components/CheckBoxField.vue";
 import RadioField from "./components/RadioField.vue";
+import TextAreaField from "./components/TextAreaField.vue";
 import axios from "axios";
 
 export default {
@@ -248,6 +226,7 @@ export default {
     ShortTextField,
     CheckBoxField,
     RadioField,
+    TextAreaField,
   },
   data() {
     return {
@@ -260,7 +239,7 @@ export default {
       phoneNumber: { value: "", isValid: null },
       email: { value: "", isValid: null },
       lineID: { value: "", isValid: null },
-      address: { value: "", isValid: true },
+      address: { value: "", isValid: null },
       consent: { isValid: null },
       allFieldObj: {},
       businessCategory: {
