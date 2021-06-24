@@ -15,7 +15,7 @@
         >
       </p>
     </div>
-    <form action="#" method="POST" @submit.prevent="onSubmit">
+    <form>
       <h2 class="text-left text-md font-semibold mb-8 mt-8">
         ข้อมูลของร้านค้า
       </h2>
@@ -133,7 +133,7 @@
         name="phone_number"
         v-model:value="phoneNumber.value"
         v-model:isValid="phoneNumber.isValid"
-        type="number"
+        type="tel"
       />
       <short-text-field
         title="อีเมล *"
@@ -189,7 +189,8 @@
       </div>
       <div class="px-4 py-3 text-right sm:px-6">
         <button
-          type="submit"
+          @click.prevent="onSubmit"
+          type="button"
           class="
             inline-flex
             justify-center
@@ -232,6 +233,7 @@ export default {
     return {
       campaignTitle:
         "ร้านค้า MyShop ลุ้นโปรโมทฟรีบน LINE Ads Platform มูลค่ารวม 200,000 บาท",
+      postURL: { domain: "", path: "" },
       shopName: { value: "", isValid: null },
       lineShopID: { value: "", isValid: null },
       RLPUser: { value: "", isValid: null, choices: ["ใช่", "ไม่ใช่"] },
@@ -240,7 +242,7 @@ export default {
       email: { value: "", isValid: null },
       lineID: { value: "", isValid: null },
       address: { value: "", isValid: null },
-      consent: { isValid: null },
+      consent: { value: true, isValid: null },
       allFieldObj: {},
       businessCategory: {
         value: [],
@@ -368,75 +370,49 @@ export default {
       beauty_sector: this.beautySector,
     };
     this.allFieldObj = Object.assign(contactFields, categoryField);
+
+    this.postURL.domain = window.location.hostname;
+    this.postURL.path = window.location.pathname;
   },
   methods: {
     onSubmit: function (event) {
       // const bodyFormData = new FormData();
       //Validate Form
       let allValidation = true;
-      let formData = {};
+      var bodyFormData = new FormData();
       for (const key in this.allFieldObj) {
+        // Assign input value to body form
+        bodyFormData.append(key, this.allFieldObj[key].value);
+
+        // Validate all field
         if (this.allFieldObj[key].isValid == null) {
           this.allFieldObj[key].isValid = false;
         }
-
         allValidation = allValidation && this.allFieldObj[key].isValid;
-        console.log(this.allFieldObj[key]);
-        let fieldValue = { [key]: this.allFieldObj[key].value };
-        formData = Object.assign(formData, fieldValue);
       }
 
-      /* var csrf_token = document.querySelector(
-        '#app input[name="csrf_token"]'
-      ).value;
-      bodyFormData.append("userName", "Fred");
-      bodyFormData.append("csrf_token", csrf_token); */
-      console.log(allValidation);
       if (allValidation) {
+        let csrf_token = document.querySelector(
+          '#app input[name="csrf_token"]'
+        );
+        if (csrf_token !== null) {
+          bodyFormData.append("csrf_token", csrf_token.value);
+        }
         axios({
           method: "post",
-          url: "https://poom-9c981.firebaseio.com/uit.json",
-          data: JSON.stringify(formData),
-          headers: { "Content-Type": "application/json" },
+          url: this.postURL.path,
+          data: bodyFormData,
+          headers: { "Content-Type": "multipart/form-data" },
         })
           .then(function (response) {
             //handle success
-            console.log("successfully");
             console.log(response);
           })
           .catch(function (response) {
             //handle error
-            console.log("error");
             console.log(response);
           });
-      } else {
       }
-
-      /*bodyFormData.append("shop_name", this.shopName.value);
-      bodyFormData.append("line_shop_id", this.lineShopID.value);
-      bodyFormData.append("line_shop_id", this.lineShopID.value);
-      console.log("Shop name value" + this.shopName.value);
-      console.log("line Shop ID value" + this.lineShopID.value);
-      console.log("Full name value" + this.fullName.value);
-      console.log("phone number value" + this.phoneNumber.value);
-      console.log("email value" + this.email.value);
-      console.log("line id value" + this.lineID.value);
-      console.log("address  value" + this.address.value);
-      console.log("this is RLP value" + this.RLPUser.value);
-      console.log("test checkbox value");
-      console.log(this.businessCategory.value);
-      console.log(this.businessCategoryCheck);
-      console.log(this.consent);
-
-      console.log(event);*/
-    },
-    onBlur: function (isValid) {
-      console.log("Call on blur");
-      isValid = false;
-    },
-    onChange: function (event) {
-      console.log("Call on change in parent");
-      console.log(event);
     },
   },
 };

@@ -41,7 +41,6 @@ export default {
   methods: {
     validation: function () {
       let defaultIsValid = false;
-      console.log(this.value.length);
       if (this.value.length > 0) {
         defaultIsValid = true;
       }

@@ -37,8 +37,6 @@ export default {
     onClick: function (event) {
       this.$emit("update:isValid", true);
       this.$emit("update:value", event.target.value);
-      console.log("test event" + event.target.value);
-      console.log("test on click");
     },
   },
 };

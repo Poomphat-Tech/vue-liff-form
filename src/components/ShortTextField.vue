@@ -53,7 +53,7 @@ export default {
         case "email":
           defaultIsValid = this.emailRegX.test(this.value);
           break;
-        case "number":
+        case "tel":
           defaultIsValid = this.phoneRegX.test(this.value);
           break;
         case "text":
