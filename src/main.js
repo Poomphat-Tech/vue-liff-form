@@ -1,5 +1,9 @@
 import { createApp } from 'vue';
-import { createRouter, createWebHashHistory } from 'vue-router';
+import {
+  createRouter,
+  createWebHashHistory,
+  createWebHistory,
+} from 'vue-router';
 
 import App from './App.vue';
 import './index.css';
@@ -8,7 +12,7 @@ import Survey from './components/survey/Survey.vue';
 import ThankYou from './components/thankyou/ThankYou.vue';
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes: [
     { path: '/', component: Survey },
     { path: '/thankyou', component: ThankYou },

@@ -11,11 +11,16 @@
         ขอสงวนสิทธิ์ให้ผู้ที่ทำถูกต้องกติกาและเงื่อนไขในการเข้าร่วมแคมเปญ
         อ่านรายละเอียดเพิ่มเติม
         <span
-          ><a href="https://linemyshop.com/terms" target="blank">คลิก</a></span
+          ><a
+            href="https://linemyshop.com/terms"
+            target="blank"
+            class="text-blue-500"
+            >คลิก</a
+          ></span
         >
       </p>
     </div>
-    <form>
+    <form @submit.prevent="onSubmit">
       <h2 class="text-left text-md font-semibold mb-8 mt-8">
         ข้อมูลของร้านค้า
       </h2>
@@ -189,8 +194,7 @@
       </div>
       <div class="px-4 py-3 text-right sm:px-6">
         <button
-          @click.prevent="onSubmit"
-          type="button"
+          type="submit"
           class="
             inline-flex
             justify-center
@@ -229,6 +233,7 @@ export default {
     RadioField,
     TextAreaField,
   },
+  inject: ["userId"],
   data() {
     return {
       campaignTitle:
@@ -244,6 +249,7 @@ export default {
       address: { value: "", isValid: null },
       consent: { value: true, isValid: null },
       allFieldObj: {},
+      csrfToken: "",
       businessCategory: {
         value: [],
         isValid: null,
@@ -373,10 +379,22 @@ export default {
 
     this.postURL.domain = window.location.hostname;
     this.postURL.path = window.location.pathname;
+
+    axios({
+      method: "get",
+      url: "/enquete/token",
+    })
+      .then((response) => {
+        console.log(response.data);
+        this.csrfToken = response.data.token;
+      })
+      .catch((response) => {
+        console.log(response);
+      });
   },
   methods: {
     onSubmit: function (event) {
-      // const bodyFormData = new FormData();
+      console.log("call from child" + this.userId.value);
       //Validate Form
       let allValidation = true;
       var bodyFormData = new FormData();
@@ -391,13 +409,8 @@ export default {
         allValidation = allValidation && this.allFieldObj[key].isValid;
       }
 
-      if (allValidation) {
-        let csrf_token = document.querySelector(
-          '#app input[name="csrf_token"]'
-        );
-        if (csrf_token !== null) {
-          bodyFormData.append("csrf_token", csrf_token.value);
-        }
+      if (allValidation && this.csrfToken !== null) {
+        bodyFormData.append("csrf_token", this.csrfToken);
         axios({
           method: "post",
           url: this.postURL.path,
@@ -407,7 +420,7 @@ export default {
           .then((response) => {
             //handle success
             console.log(response);
-            $router.push({ path: "/thankyou" });
+            this.$router.push({ path: "/thankyou" });
           })
           .catch((response) => {
             //handle error
