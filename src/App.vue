@@ -4,7 +4,7 @@
 
 <script>
 import liff from "@line/liff";
-import { computed, ref, reactive, provide } from "vue";
+import { ref, provide } from "vue";
 
 export default {
   setup() {
@@ -16,21 +16,45 @@ export default {
   data() {
     return {
       liffID: "1656147398-AKEdKNd7",
+      profile: null,
+      liffContext: null,
+      hasExternalBrowserLogin: true,
     };
   },
-  mounted: function () {
-    if (this.liffID != null) {
+  created() {
+    if (this.liffID != "") {
       this.initLiff();
     }
   },
   methods: {
-    async initLiff() {
-      await liff.init({
-        liffId: this.liffID,
-      });
-      const profile = await liff.getProfile();
-      this.userId = profile.userId;
+    async initLiff() {      
+      await liff.init({liffId: this.liffID,});           
+      if(liff.isInClient()){
+        this.profile = await this.setLiffProfile(); 
+      }else{
+        if(!this.hasExternalBrowserLogin){
+          return
+        }
+        if(!liff.isLoggedIn()){     
+          console.log("liff is not logging in");     
+          liff.login({redirectUri: window.location.href})
+          return
+        }
+        this.profile = await this.setLiffProfile(); 
+      }                  
+      console.log(this.userId);
+      console.log(this.profile);
     },
+    async setLiffProfile(){
+      const profile = await liff.getProfile();
+      const context = liff.getContext();
+      this.userId = profile.userId;
+      const liffInfo = {
+        profile: profile,
+        context: context
+      }
+      return liffInfo;
+    }
   },
 };
 </script>

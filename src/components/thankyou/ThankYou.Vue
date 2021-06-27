@@ -8,7 +8,7 @@
         </p>
         <p class="text-lg font-normal text-gray-500">
           ช้อปต่อที่
-          <span><a href="https://shop.line.me">https://shop.line.me </a></span
+          <span><a href="https://shop.line.me">https://shop.line.me </a></span  
           >เลย
         </p>
       </h1>
@@ -18,6 +18,7 @@
 
 <script>
 </script>
+
 <style>
 .wrapper {
   width: 500px;

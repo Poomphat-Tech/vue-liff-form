@@ -6,3 +6,4 @@ dist-ssr
 /public
 yarn.lock
 .env
+vetur.config.js

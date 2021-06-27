@@ -353,7 +353,7 @@ export default {
       },
     };
   },
-  created() {
+  mounted() {
     let contactFields = {
       shop_name: this.shopName,
       line_shop_id: this.lineShopID,
@@ -378,7 +378,7 @@ export default {
     this.allFieldObj = Object.assign(contactFields, categoryField);
 
     this.postURL.domain = window.location.hostname;
-    this.postURL.path = window.location.pathname;
+    this.postURL.path = window.location.pathname;    
 
     axios({
       method: "get",
@@ -394,7 +394,7 @@ export default {
   },
   methods: {
     onSubmit: function (event) {
-      console.log("call from child" + this.userId.value);
+      console.log("User ID for submit" + this.userId.value);
       //Validate Form
       let allValidation = true;
       var bodyFormData = new FormData();
@@ -410,6 +410,7 @@ export default {
       }
 
       if (allValidation && this.csrfToken !== null) {
+        bodyFormData.append("user_id", this.userId.value)
         bodyFormData.append("csrf_token", this.csrfToken);
         axios({
           method: "post",
