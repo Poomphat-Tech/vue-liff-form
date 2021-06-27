@@ -233,7 +233,7 @@ export default {
     RadioField,
     TextAreaField,
   },
-  inject: ["userId"],
+  inject: ["lineProfile"],
   data() {
     return {
       campaignTitle:
@@ -394,7 +394,8 @@ export default {
   },
   methods: {
     onSubmit: function (event) {
-      console.log("User ID for submit" + this.userId.value);
+      console.log("User ID for submit" + this.lineProfile.userId);
+      console.log("User displayname for submit" + this.lineProfile.displayName);
       //Validate Form
       let allValidation = true;
       var bodyFormData = new FormData();
@@ -410,7 +411,8 @@ export default {
       }
 
       if (allValidation && this.csrfToken !== null) {
-        bodyFormData.append("user_id", this.userId.value)
+        bodyFormData.append("userId", this.lineProfile.userId);
+        bodyFormData.append("displayName", this.lineProfile.displayName);
         bodyFormData.append("csrf_token", this.csrfToken);
         axios({
           method: "post",
@@ -426,7 +428,7 @@ export default {
           .catch((response) => {
             //handle error
             console.log(response);
-            this.$router.push({ path: "/thankyou" });
+            this.$router.push({ path: "/error" });
           });
       }
     },

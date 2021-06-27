@@ -4,33 +4,39 @@
 
 <script>
 import liff from "@line/liff";
-import { ref, provide } from "vue";
+import { reactive, provide } from "vue";
 
 export default {
   setup() {
-    const uid = ref("");
+    const lProfile = reactive({
+      userId: '',
+      displayName: '',
+      pictureUrl: '',
+      statusMessage: '',
+      appLaunchType: '', //utou, group, room, external, none
+    });
     // Inject uid to child component
-    provide("userId", uid);
-    return { userId: uid };
+    provide("lineProfile", lProfile);
+    return { lineProfile: lProfile };
   },
   data() {
     return {
-      liffID: "1656147398-AKEdKNd7",
-      profile: null,
-      liffContext: null,
+      liffID: '',
       hasExternalBrowserLogin: true,
     };
   },
-  created() {
-    if (this.liffID != "") {
+  created() {    
+    this.liffID = window.global.liffID;         
+    if (this.liffID !== ''){      
       this.initLiff();
     }
   },
   methods: {
     async initLiff() {      
+      console.log('init liff id ' + this.liffID);
       await liff.init({liffId: this.liffID,});           
       if(liff.isInClient()){
-        this.profile = await this.setLiffProfile(); 
+        await this.setLiffProfile(); 
       }else{
         if(!this.hasExternalBrowserLogin){
           return
@@ -40,20 +46,18 @@ export default {
           liff.login({redirectUri: window.location.href})
           return
         }
-        this.profile = await this.setLiffProfile(); 
+        await this.setLiffProfile(); 
       }                  
-      console.log(this.userId);
-      console.log(this.profile);
+      console.log("Current user " + this.lineProfile.displayName);      
     },
     async setLiffProfile(){
       const profile = await liff.getProfile();
-      const context = liff.getContext();
-      this.userId = profile.userId;
-      const liffInfo = {
-        profile: profile,
-        context: context
-      }
-      return liffInfo;
+      const context = liff.getContext();      
+      console.log(profile)
+      this.lineProfile.userId = profile.userId;
+      this.lineProfile.displayName = profile.displayName;
+      this.lineProfile.pictureUrl = profile.pictureUrl;
+      this.lineProfile.appLaunchType = context.type
     }
   },
 };
