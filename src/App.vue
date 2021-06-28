@@ -3,7 +3,6 @@
 </template>
 
 <script>
-// import liff from "@line/liff";
 import { reactive, provide } from "vue";
 
 import SurveyPage from './components/survey/Survey.vue';
@@ -33,7 +32,7 @@ export default {
     return {
       currentPage: '',
       liffID: '',
-      hasExternalBrowserLogin: true,      
+      hasExternalBrowserLogin: true, //Set to false if want to disable browser LINE login      
     };
   },
   mounted() {    
@@ -51,8 +50,8 @@ export default {
     SetupDefaultPage(){
       this.currentPage = 'SurveyPage'
     },
-    async setUpLiff(liffId) {          
-      console.log('liff id' + this.liffID);
+    async setUpLiff(liffId) {      
+      try{          
       await liff.init({liffId: this.liffID});
       if(liff.isInClient()){        
         await this.setLiffProfile(); 
@@ -60,8 +59,7 @@ export default {
         if(!this.hasExternalBrowserLogin){
           this.SetupDefaultPage();
           return Promise.resolve();
-        }
-        console.log(liff.isLoggedIn());
+        }        
         if(!liff.isLoggedIn()){                
           liff.login({redirectUri: window.location.href})
           return Promise.resolve();
@@ -69,8 +67,10 @@ export default {
         
         await this.setLiffProfile();         
       }       
-
       this.SetupDefaultPage();            
+      }catch(err){
+        console.log(err);
+      }
     },
     async setLiffProfile(){
       const profile = await liff.getProfile();
@@ -78,8 +78,7 @@ export default {
       this.lineProfile.userId = profile.userId;
       this.lineProfile.displayName = profile.displayName;
       this.lineProfile.pictureUrl = profile.pictureUrl;
-      this.lineProfile.appLaunchType = context.type
-      console.log(profile);
+      this.lineProfile.appLaunchType = context.type      
     }
   },
 };

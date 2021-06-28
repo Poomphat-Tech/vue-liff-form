@@ -386,8 +386,7 @@ export default {
       method: "get",
       url: "/enquete/token",
     })
-      .then((response) => {
-        console.log(response.data);
+      .then((response) => {        
         this.csrfToken = response.data.token;
       })
       .catch((response) => {
@@ -396,8 +395,6 @@ export default {
   },
   methods: {
     onSubmit: function (event) {            
-      console.log("User ID for submit" + this.lineProfile.userId);
-      console.log("User displayname for submit" + this.lineProfile.displayName);      
       //Validate Form
       let allValidation = true;
       var bodyFormData = new FormData();
@@ -423,8 +420,7 @@ export default {
           headers: { "Content-Type": "multipart/form-data" },
         })
           .then((response) => {
-            //handle success
-            console.log(response);            
+            //handle success                   
             this.$emit('changePage:page', 'ThankYouPage')
           })
           .catch((response) => {
