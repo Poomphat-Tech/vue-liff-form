@@ -41,7 +41,7 @@
         type="text"
       />
       <radio-field
-        title="สมัครรับชำระด้วย Rabbit LINE Pay แล้วหรือไม่"
+        title="สมัครรับชำระด้วย Rabbit LINE Pay แล้วหรือไม่ *"
         name="rlp"
         :radio-box="RLPUser.choices"
         v-model:value="RLPUser.value"
@@ -50,7 +50,7 @@
       ></radio-field>
 
       <check-box-field
-        title="กรุณาระบุหมวดหมู่ธุรกิจหรือบริการของคุณ (เลือกข้อเดียวที่เหมาะสมมากที่สุด)"
+        title="กรุณาระบุหมวดหมู่ธุรกิจหรือบริการของคุณ (เลือกข้อเดียวที่เหมาะสมมากที่สุด) *"
         name="business_category"
         :choices="businessCategory.choices"
         v-model:value="businessCategory.value"
@@ -233,7 +233,9 @@ export default {
     RadioField,
     TextAreaField,
   },
+  props: ['page'],
   inject: ["lineProfile"],
+  emits: ['changePage:page'],
   data() {
     return {
       campaignTitle:
@@ -393,9 +395,9 @@ export default {
       });
   },
   methods: {
-    onSubmit: function (event) {
+    onSubmit: function (event) {            
       console.log("User ID for submit" + this.lineProfile.userId);
-      console.log("User displayname for submit" + this.lineProfile.displayName);
+      console.log("User displayname for submit" + this.lineProfile.displayName);      
       //Validate Form
       let allValidation = true;
       var bodyFormData = new FormData();
@@ -422,13 +424,13 @@ export default {
         })
           .then((response) => {
             //handle success
-            console.log(response);
-            this.$router.push({ path: "/thankyou" });
+            console.log(response);            
+            this.$emit('changePage:page', 'ThankYouPage')
           })
           .catch((response) => {
             //handle error
-            console.log(response);
-            this.$router.push({ path: "/error" });
+            console.log(response);            
+            this.$emit('changePage:page', 'ErrorPage')
           });
       }
     },
