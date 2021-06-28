@@ -4,3 +4,6 @@ dist
 dist-ssr
 *.local
 /public
+yarn.lock
+.env
+vetur.config.js

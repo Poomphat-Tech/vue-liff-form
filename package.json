@@ -6,8 +6,10 @@
     "serve": "vite preview"
   },
   "dependencies": {
+    "@line/liff": "^2.11.1",
     "axios": "^0.21.1",
-    "vue": "^3.0.5"
+    "vue": "^3.0.5",
+    "vue-router": "4"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.3.3",
